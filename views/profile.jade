@@ -1,0 +1,10 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    h1= title
+    p Welcome #{username}!
+    form(action='/profile', method='post')
+      p
+        input(type='submit', value='Log Out')

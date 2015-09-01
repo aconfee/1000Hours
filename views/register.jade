@@ -1,0 +1,17 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    h1= title
+    p Register!
+    form(action='/register', method='post')
+      p
+        input(type='text', name='username', placeholder='Username')
+      p
+        input(type='password', name='password', placeholder='Password')
+      p
+        input(type='password', name='passwordConfirm', placeholder='Password')
+      p
+        input(type='submit', value='Register')
+    p= message
