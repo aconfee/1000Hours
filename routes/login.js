@@ -1,4 +1,5 @@
 var Credentials = require('../models/Credentials');
+var bcrypt = require('bcrypt');
 
 // Login post request
 exports.userLogin = function(req, res, next){
@@ -18,35 +19,42 @@ exports.userLogin = function(req, res, next){
 				title: 'Login',
 				message: 'No user with the name ' + username + ' could be found.'
 			});
-			
 		}
 		else{
-			// Incorrect password.
-			if(users[0].password != password){
-				console.log('Incorrect password entered.');				
-				res.render('login', {
-					title: 'Login',
-					message: 'Incorrect password entered.'
-				});
-			}
-			else{
-				console.log('Successfully logged in.');	
+			console.log('User found, unhashing password.');
+			
+			// Validate password.			
+			bcrypt.hash(password, users[0].salt, function(err, hash){
+				if(err) return next(err);
 				
-				// Save the uid to both login and profile.
-				res.cookie('uid', users[0]._id, { 
-					path: '/profile', 
-					maxAge: 900000, 
-					httpOnly: true 
-				});
+				console.log('unhash is: ' + hash);
 				
-				res.cookie('uid', users[0]._id, { 
-					path: '/login', 
-					maxAge: 900000, 
-					httpOnly: true 
-				});
-				
-				res.redirect('/profile');
-			}			
+				if(users[0].password != hash){
+					console.log('Incorrect password entered.');				
+					res.render('login', {
+						title: 'Login',
+						message: 'Incorrect password entered.'
+					});
+				}
+				else{
+					console.log('Successfully logged in.');	
+					
+					// Save the uid to both login and profile.
+					res.cookie('uid', users[0]._id, { 
+						path: '/profile', 
+						maxAge: 900000, 
+						httpOnly: true 
+					});
+					
+					res.cookie('uid', users[0]._id, { 
+						path: '/login', 
+						maxAge: 900000, 
+						httpOnly: true 
+					});
+					
+					res.redirect('/profile');
+				}
+			});			
 		}	
 	});
 };
