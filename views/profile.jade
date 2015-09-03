@@ -5,6 +5,13 @@ html
   body
     h1= title
     p Welcome #{username}!
+    a(href='/newgoal') Create New Goal!
+    
+    ul
+      each val in goals
+        - var display = 'Title: ' + val.title + ' Description:' + val.description;
+        li= display
+    
     form(action='/profile', method='post')
       p
         input(type='submit', value='Log Out')

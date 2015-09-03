@@ -11,6 +11,7 @@ var users = require('./routes/users');
 var login = require('./routes/login');
 var register = require('./routes/register');
 var profile = require('./routes/profile');
+var newgoal = require('./routes/newgoal');
 
 var app = express();
 
@@ -36,10 +37,12 @@ app.use('/users', users);
 app.get('/login', login.form);
 app.get('/register', register.form);
 app.get('/profile', profile.show);
+app.get('/newgoal', newgoal.form);
 
 app.post('/login', login.userLogin);
 app.post('/register', register.userRegister);
 app.post('/profile', profile.logout);
+app.post('/newgoal', newgoal.createGoal);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

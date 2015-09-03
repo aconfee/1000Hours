@@ -1,4 +1,4 @@
-var Credentials = require('../models/Credentials');
+var User = require('../models/User');
 var bcrypt = require('bcrypt');
 
 // Register post request.
@@ -17,10 +17,9 @@ exports.userRegister = function(req, res, next){
 		return;		
 	}
 	
-	Credentials.find({username: username}, function(err, users){
+	User.find({username: username}, function(err, users){
 		if(err) return next(err);
 
-		console.log(users);
 		// If username already exists, don't register.
 		if(users.length > 0){
 			console.log('Found user ' + users[0].username + ' already exists.');	
@@ -38,7 +37,7 @@ exports.userRegister = function(req, res, next){
 				console.log('Password hashed.');
 				
 				// Add new user to the db.
-				Credentials.create({
+				User.create({
 					username: username,
 					password: hash, 
 					salt: salt
@@ -62,7 +61,7 @@ exports.form = function(req, res, next){
 
 // Secure the password.
 var hashPassword = function(password, fn){
-	bcrypt.genSalt(12, function(err, salt){
+	bcrypt.genSalt(13, function(err, salt){
 		if(err) return fn(err);
 		bcrypt.hash(password, salt, function(err, hash){
 			if(err) return fn(err);

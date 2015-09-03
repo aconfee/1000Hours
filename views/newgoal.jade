@@ -1,0 +1,33 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    h1= title
+    form(action='/newgoal', method='post')
+      p
+        input(type='text', name='title', placeholder='Title')
+      p
+        input(type='text', name='description', rows='4', placeholder='Description')
+      p End Date
+        select(name='endMonth')
+          option(value='January') January
+          option(value='February') February
+          option(value='March') March
+          option(value='April') April
+          option(value='May') May
+          option(value='June') June
+          option(value='July') July
+          option(value='August') August
+          option(value='September') September
+          option(value='October') October
+          option(value='November') November
+          option(value='December') December
+          
+        input(type='text', name='endDay', placeholder='Day')
+        input(type='text', name='endYear', placeholder='Year')
+                                      
+      p
+        input(type='submit', value='Create Goal!')
+        
+    a(href='/profile') Back to Profile

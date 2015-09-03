@@ -1,4 +1,5 @@
-var Credentials = require('../models/Credentials');
+var User = require('../models/User');
+var UserHelper = require('../lib/userLib');
 var bcrypt = require('bcrypt');
 
 // Login post request
@@ -11,7 +12,7 @@ exports.userLogin = function(req, res, next){
 	
 	// Find the user
 	console.log('Finding the user...');
-	Credentials.find({'username': username}, function(err, users){
+	User.find({'username': username}, function(err, users){
 		if(users.length === 0){
 			console.log('No user with the name ' + username + ' could be found.');
 			
@@ -39,7 +40,7 @@ exports.userLogin = function(req, res, next){
 				else{
 					console.log('Successfully logged in.');	
 					
-					// Save the uid to both login and profile.
+					// Save the uid to pages that need to know.
 					res.cookie('uid', users[0]._id, { 
 						path: '/profile', 
 						maxAge: 900000, 
@@ -48,6 +49,12 @@ exports.userLogin = function(req, res, next){
 					
 					res.cookie('uid', users[0]._id, { 
 						path: '/login', 
+						maxAge: 900000, 
+						httpOnly: true 
+					});
+					
+					res.cookie('uid', users[0]._id, { 
+						path: '/newgoal', 
 						maxAge: 900000, 
 						httpOnly: true 
 					});
@@ -61,27 +68,11 @@ exports.userLogin = function(req, res, next){
 
 // The login form.
 exports.form = function(req, res, next){
-	var uid = req.cookies.uid;
-	
-	// Known bug https://github.com/Automattic/mongoose/pull/3271
-	if(typeof uid === 'undefined'){
-		console.log('No user with the id ' + uid + ' could be found.');	
-		res.render('login', {
-			title: 'Login'
-		});
-		return;
-	}
-	
-	Credentials.findById(uid, function(err, user){
-		if(err) return next(err);
-
-		// If corresponding user doens't exist, redirect to login.
-		if(user){
-			console.log('Found user ' + user.username + ' already logged in.');	
-			res.redirect('/profile');		
+	UserHelper.isLoggedIn(req.cookies.uid, next, function(isLoggedIn, user){
+		if(isLoggedIn){
+			res.redirect('/profile');	
 		}
 		else{
-			console.log('No user with the id ' + uid + ' could be found.');	
 			res.render('login', {
 				title: 'Login'
 			});
