@@ -12,6 +12,4 @@ html
         - var display = 'Title: ' + val.title + ' Description:' + val.description;
         li= display
     
-    form(action='/profile', method='post')
-      p
-        input(type='submit', value='Log Out')
+    a(href='/signout') Log Out
