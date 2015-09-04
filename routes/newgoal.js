@@ -3,26 +3,38 @@ var UserHelper = require('../lib/userLib');
 var Goal = require('../models/Goal');
 
 // New goal post request.
-exports.createGoal = function(req, res, next){
+exports.createMasterGoal = function(req, res, next){
 	var title = req.body.title;
 	var description = req.body.description;
+	var monthsToCompleteGoal = req.body.months;
+	var daysToCompleteGoal = Math.trunc((monthsToCompleteGoal / 12) * 365);
+	var totalGoalHours = 1000;
 	
 	UserHelper.isLoggedIn(req.cookies.uid, next, function(isLoggedIn, user){
 		if(isLoggedIn){
 			console.log('Saving new goal ' + title + ' for ' + user.username);
 			
+			var date = new Date();
+			var dateUTC = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+				
 			Goal.create({
 				ownername: user.username,
 				title: title,
 				description: description,
-				daylog: 0,
-				weeklog: 0,
-				totallog: 0,
-				enddate: '12/25/2016'
+				loggedDayHours: 0,
+				loggedWeekHours: 0,
+				loggedTotalHours: 0,				
+				totalHoursPerDay: totalGoalHours / daysToCompleteGoal,
+				totalHoursPerWeek: totalGoalHours / (daysToCompleteGoal / 7),
+				totalHoursToGoal: totalGoalHours,
+				timerStart: 0,
+				startTime: (new Date()).getTime(), // Expected % complete = (CurrentTime - startTime)in days / durationDays
+				durationDays: daysToCompleteGoal,
+				lastUpdateUTC: dateUTC
 			}, function(err){
 				if(err) throw err;
 				
-				// TODO: Add goal title to user.
+				console.log('Goal created.');
 				res.redirect('/profile');
 			});	
 		}

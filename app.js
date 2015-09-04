@@ -13,6 +13,7 @@ var register = require('./routes/register');
 var profile = require('./routes/profile');
 var newgoal = require('./routes/newgoal');
 var signout = require('./routes/signout');
+var goal = require('./routes/goal');
 
 var app = express();
 
@@ -41,9 +42,13 @@ app.get('/profile', profile.show);
 app.get('/newgoal', newgoal.form);
 app.get('/signout', signout.signout);
 
+app.get('/goal/:goalId/toggleTimer', goal.toggleTimer);
+//app.get('/goal/:goalId/addTime');
+//app.get('/goal/:goalId/edit')
+
 app.post('/login', login.userLogin);
 app.post('/register', register.userRegister);
-app.post('/newgoal', newgoal.createGoal);
+app.post('/newgoal', newgoal.createMasterGoal);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

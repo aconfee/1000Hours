@@ -5,10 +5,16 @@ var Goal = new Schema({
 	ownername: String,
 	title: String,
 	description: String,
-	daylog: Number,
-	weeklog: Number,
-	totallog: Number,
-	enddate: Date	
+	loggedDayHours: Number,
+	loggedWeekHours: Number,
+	loggedTotalHours: Number,
+	totalHoursPerDay: Number,
+	totalHoursPerWeek: Number,
+	totalHoursToGoal: Number,
+	timerStart: Number,
+	startTime: Number,
+	durationDays: Number,
+	lastUpdateUTC: Date
 });
 
 module.exports = mongoose.model('Goal', Goal);

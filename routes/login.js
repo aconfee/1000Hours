@@ -43,19 +43,19 @@ exports.userLogin = function(req, res, next){
 					// Save the uid to pages that need to know.
 					res.cookie('uid', users[0]._id, { 
 						path: '/profile', 
-						maxAge: 900000, 
+						maxAge: 86400000, 
 						httpOnly: true 
 					});
 					
 					res.cookie('uid', users[0]._id, { 
 						path: '/login', 
-						maxAge: 900000, 
+						maxAge: 86400000, 
 						httpOnly: true 
 					});
 					
 					res.cookie('uid', users[0]._id, { 
 						path: '/newgoal', 
-						maxAge: 900000, 
+						maxAge: 86400000, 
 						httpOnly: true 
 					});
 					
