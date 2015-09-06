@@ -1,0 +1,24 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    h1= title
+    p Choose the type of goal you wish to complete.
+    p
+    h2 MASTER
+    p Complete 1000 hours within a given timeframe.
+    a(href='/createGoal/master') Choose
+
+    p
+    h2 PRACTICED
+    p Choose your own desired hours per day or week with no end day. 
+    a(href='/createGoal/practiced') Choose
+
+    p
+    h2 CUSTOM
+    p Choose how many hours you want to complete, and your own end date.
+    p
+      a(href='/createGoal/custom') Choose
+    p
+      a(href='/profile') Back to Profile

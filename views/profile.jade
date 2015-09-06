@@ -5,7 +5,7 @@ html
   body
     h1= title
     p Welcome #{username}!
-    a(href='/newgoal') Create New Goal!
+    a(href='/createGoal') Create New Goal!
     
     ul
       each val in goals
@@ -30,7 +30,8 @@ html
           p= val.description
           p Day status: #{loggedDayHours}hrs #{loggedDayMinutes}min / #{totalDayHours}hrs #{totalDayMinutes}min
           p Week status: #{loggedWeekHours}hrs #{loggedWeekMinutes}min / #{totalWeekHours}hrs #{totalWeekMinutes}min
-          p Total status: #{loggedTotalHours}hrs #{loggedTotalMinutes}min / #{totalGoalHours}hrs #{totalGoalMinutes}min
+          if val.totalHoursToGoal >= 0
+            p Total status: #{loggedTotalHours}hrs #{loggedTotalMinutes}min / #{totalGoalHours}hrs #{totalGoalMinutes}min
           
           if timerStarted
             a(href='/goal/' + val._id + '/toggleTimer') Stop Timer

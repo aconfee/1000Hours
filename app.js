@@ -11,7 +11,7 @@ var users = require('./routes/users');
 var login = require('./routes/login');
 var register = require('./routes/register');
 var profile = require('./routes/profile');
-var newgoal = require('./routes/newgoal');
+var createGoal = require('./routes/createGoal');
 var signout = require('./routes/signout');
 var goal = require('./routes/goal');
 
@@ -39,16 +39,17 @@ app.use('/users', users);
 app.get('/login', login.form);
 app.get('/register', register.form);
 app.get('/profile', profile.show);
-app.get('/newgoal', newgoal.form);
+app.get('/createGoal', createGoal.chooseType); // DONE
+app.get('/createGoal/:type', createGoal.detailsForm); // DONE
 app.get('/signout', signout.signout);
 
 app.get('/goal/:goalId/toggleTimer', goal.toggleTimer);
 //app.get('/goal/:goalId/addTime');
-//app.get('/goal/:goalId/edit')
+//app.get('/goal/:goalId/edit');
 
 app.post('/login', login.userLogin);
 app.post('/register', register.userRegister);
-app.post('/newgoal', newgoal.createMasterGoal);
+app.post('/createGoal/:type', createGoal.saveDetails); // DONE
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

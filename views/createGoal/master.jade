@@ -4,7 +4,7 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     h1= title
-    form(action='/newgoal', method='post')
+    form(action='/createGoal/master', method='post')
       p
         input(type='text', name='title', placeholder='Title')
       p
@@ -17,6 +17,6 @@ html
           option(value='12') AVERAGE. 1 year. About 2 hours 45 minutes/day
           option(value='32.87') SLOW. 2 years 9 months. About 1 hour/day)                                     
       p
-        input(type='submit', value='Create Goal!')
+        input(type='submit', value='Save Goal!')
         
     a(href='/profile') Back to Profile

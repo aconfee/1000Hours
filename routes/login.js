@@ -54,7 +54,13 @@ exports.userLogin = function(req, res, next){
 					});
 					
 					res.cookie('uid', users[0]._id, { 
-						path: '/newgoal', 
+						path: '/createGoal', 
+						maxAge: 86400000, 
+						httpOnly: true 
+					});
+					
+					res.cookie('uid', users[0]._id, { 
+						path: '/createGoal/:type', 
 						maxAge: 86400000, 
 						httpOnly: true 
 					});
