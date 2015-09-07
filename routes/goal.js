@@ -1,6 +1,8 @@
 var Goal = require('../models/Goal');
 var GoalHelper = require('../lib/goalLib');
 
+// goal toggle timer get
+// /goal/:goalId/toggleTimer
 exports.toggleTimer = function(req, res, next){
 	var goalId = req.params.goalId;
 	
@@ -70,5 +72,65 @@ exports.toggleTimer = function(req, res, next){
 		else{
 			next(err);
 		}
+	});
+};
+
+// GET edit page
+// /goal/:goalId/edit
+exports.edit = function(req, res, next){
+	console.log('edit page');
+	var goalId = req.params.goalId;
+	
+	if(typeof goalId === 'undefined'){
+		console.log('Goal id provided in params is undefined.');
+		res.redirect('/profile');	
+	}
+	
+	Goal.findById(goalId, function(err, goal){
+		if(goal){
+			var goalType = goal.goalType;
+			switch(goalType){
+				case 'master':
+					res.render('editGoal/master', {
+						title: 'Edit Master Goal',
+						goalId: goalId
+					});
+					break;
+				case 'practiced':
+					res.render('editGoal/practiced', {
+						title: 'Edit Practice Goal',
+						goalId: goalId
+					});
+					break;
+				case 'custom':
+					res.render('editGoal/custom', {
+						title: 'Edit Custom Goal',
+						goalId: goalId
+					});
+					break;
+				default:
+					next(err);
+			}
+		}
+		else{
+			next(err);
+		}
+	});
+};
+
+// /goal/:goalId/delete
+exports.delete = function(req, res, next){
+	var goalId = req.params.goalId;
+	console.log('deleting goal');
+	
+	if(typeof goalId === 'undefined'){
+		console.log('Goal id provided in params is undefined.');
+		res.redirect('/profile');	
+	}
+	
+	Goal.remove({ _id: goalId }, function(err){
+		if(err) return next(err);
+		
+		res.redirect('/profile');
 	});
 };

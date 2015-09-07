@@ -39,11 +39,13 @@ app.use('/users', users);
 app.get('/login', login.form);
 app.get('/register', register.form);
 app.get('/profile', profile.show);
-app.get('/createGoal', createGoal.chooseType); // DONE
-app.get('/createGoal/:type', createGoal.detailsForm); // DONE
+app.get('/createGoal', createGoal.chooseType);
+app.get('/createGoal/:type', createGoal.detailsForm);
 app.get('/signout', signout.signout);
 
 app.get('/goal/:goalId/toggleTimer', goal.toggleTimer);
+app.get('/goal/:goalId/edit', goal.edit);
+app.get('/goal/:goalId/delete', goal.delete);
 //app.get('/goal/:goalId/addTime');
 //app.get('/goal/:goalId/edit');
 

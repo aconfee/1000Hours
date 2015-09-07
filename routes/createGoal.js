@@ -80,7 +80,8 @@ exports.saveDetails = function(req, res, next){
 					timerStart: 0,
 					startTime: date.getTime(), // Expected % complete = (CurrentTime - startTime)in days / durationDays
 					durationDays: daysToCompleteGoal,
-					lastUpdateTime: date
+					lastUpdateTime: date,
+					goalType: 'master'
 				}, function(err){
 					if(err) throw err;
 					
@@ -119,7 +120,8 @@ exports.saveDetails = function(req, res, next){
 					timerStart: 0,
 					startTime: date.getTime(), // Expected % complete = (CurrentTime - startTime)in days / durationDays
 					durationDays: -1,
-					lastUpdateTime: date
+					lastUpdateTime: date,
+					goalType: 'practiced'
 				}, function(err){
 					if(err) throw err;
 					
@@ -156,7 +158,8 @@ exports.saveDetails = function(req, res, next){
 					timerStart: 0,
 					startTime: date.getTime(), // Expected % complete = (CurrentTime - startTime)in days / durationDays
 					durationDays: daysToCompleteGoal,
-					lastUpdateTime: date
+					lastUpdateTime: date,
+					goalType: 'custom'
 				}, function(err){
 					if(err) throw err;
 					

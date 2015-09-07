@@ -1,0 +1,12 @@
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    h1= title
+       
+    - var actionUrl = '/goal/' + goalId + '/delete';
+    p
+      a(href=actionUrl) Delete Goal	
+    p
+      a(href='/profile') Back to Profile
