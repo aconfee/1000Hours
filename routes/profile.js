@@ -11,6 +11,7 @@ exports.show = function(req, res, next){
 		if(isLoggedIn){
 			GoalHelper.getUserGoals(user.username, next, function(goals){				
 				console.log('Rendering profile.');
+				
 				res.render('profile', {
 					title: 'Profile',
 					username: user.username,

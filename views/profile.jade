@@ -5,44 +5,60 @@ html
   body
     h1= title
     p Welcome #{username}!
-    h2 Thank you all for testing this! 
-    p Future progress might be a little slow while I interview, but I promise in a week or two you should start seeing super cool visual updates. 
+    h2 UPDATE 9/9
+    p BEHOLD! Now you can see how on track you are with your goal. For total time and weekly time, you are shown what % of your goal you re at, and where you should be. 
+    p When styling is added, these wont be text, but progress bars with some fancy art magic. 
     p Feel free to email me any feedback at adamestela@gmail.com. 
     a(href='/createGoal') Create New Goal!
     
     ul
-      each val in goals
-        - var timerStarted = val.timerStart != 0;
-        - var loggedDayHours = Math.trunc(val.loggedDayHours);
-        - var loggedDayMinutes = Math.trunc((val.loggedDayHours * 60) % 60);
-        - var loggedWeekHours = Math.trunc(val.loggedWeekHours);
-        - var loggedWeekMinutes = Math.trunc((val.loggedWeekHours * 60) % 60);
-        - var loggedTotalHours = Math.trunc(val.loggedTotalHours);
-        - var loggedTotalMinutes = Math.trunc((val.loggedTotalHours * 60) % 60);
-        - var totalDayHours = Math.trunc(val.totalHoursPerDay);
-        - var totalDayMinutes = Math.trunc((val.totalHoursPerDay * 60) % 60);
-        - var totalWeekHours = Math.trunc(val.totalHoursPerWeek);
-        - var totalWeekMinutes = Math.trunc((val.totalHoursPerWeek * 60) % 60);
-        - var totalGoalHours = Math.trunc(val.totalHoursToGoal);
-        - var totalGoalMinutes = Math.trunc((val.totalHoursToGoal * 60) % 60);
+      each goal in goals
+        - var timerStarted = goal.timerStart != 0;
+        - var loggedDayHours = Math.trunc(goal.loggedDayHours);
+        - var loggedDayMinutes = Math.trunc((goal.loggedDayHours * 60) % 60);
+        - var loggedWeekHours = Math.trunc(goal.loggedWeekHours);
+        - var loggedWeekMinutes = Math.trunc((goal.loggedWeekHours * 60) % 60);
+        - var loggedTotalHours = Math.trunc(goal.loggedTotalHours);
+        - var loggedTotalMinutes = Math.trunc((goal.loggedTotalHours * 60) % 60);
+        - var totalDayHours = Math.trunc(goal.totalHoursPerDay);
+        - var totalDayMinutes = Math.trunc((goal.totalHoursPerDay * 60) % 60);
+        - var totalWeekHours = Math.trunc(goal.totalHoursPerWeek);
+        - var totalWeekMinutes = Math.trunc((goal.totalHoursPerWeek * 60) % 60);
+        - var totalGoalHours = Math.trunc(goal.totalHoursToGoal);
+        - var totalGoalMinutes = Math.trunc((goal.totalHoursToGoal * 60) % 60);
+        
+        - var startDay = goal.startTime / 86400000;
+        - var endDay = startDay + goal.durationDays;
+        - var currentDay = (new Date()).getTime() / 86400000;
+        - var daysElapsed = currentDay - startDay;
+        - var totalPercentOfTimePassed = ((daysElapsed / goal.durationDays) * 100).toFixed(2);
+        - var totalPercentHoursLogged = ((goal.loggedTotalHours / goal.totalHoursToGoal) * 100).toFixed(2);
+        
+        - var weekPercentOfTimePassed = (((new Date()).getDay() / 6) * 100).toFixed(2);
+        - var weekPercentHoursLogged = ((goal.loggedWeekHours / goal.totalHoursPerWeek) * 100).toFixed(2);
         
         li 
           p
             b 
-              u #{val.title}
-          p= val.description
+              u #{goal.title}
+          p= goal.description
+          br
           p Day status: #{loggedDayHours}hrs #{loggedDayMinutes}min / #{totalDayHours}hrs #{totalDayMinutes}min
+          br
           p Week status: #{loggedWeekHours}hrs #{loggedWeekMinutes}min / #{totalWeekHours}hrs #{totalWeekMinutes}min
-          if val.totalHoursToGoal >= 0
+          if goal.totalHoursToGoal >= 0
+            p Week stats: At #{weekPercentHoursLogged}%, should be at #{weekPercentOfTimePassed}%. 
+            br
             p Total status: #{loggedTotalHours}hrs #{loggedTotalMinutes}min / #{totalGoalHours}hrs #{totalGoalMinutes}min
+            p Total stats: At #{totalPercentHoursLogged}%, should be at #{totalPercentOfTimePassed}%.
           
           if timerStarted
-            a(href='/goal/' + val._id + '/toggleTimer') Stop Timer
+            a(href='/goal/' + goal._id + '/toggleTimer') Stop Timer
             p === Recording goal! ===  
           else
-            a(href='/goal/' + val._id + '/toggleTimer') Start Timer
+            a(href='/goal/' + goal._id + '/toggleTimer') Start Timer
            
           p
-            a(href='/goal/' + val._id + '/edit') Edit Goal
+            a(href='/goal/' + goal._id + '/edit') Edit Goal
              
     a(href='/signout') Log Out
