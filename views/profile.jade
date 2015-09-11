@@ -12,6 +12,8 @@ html
     a(href='/createGoal') Create New Goal!
     
     ul
+      <!-- Get all the info we need for each goal. -->
+      <!-- Calculate and format hours. -->
       each goal in goals
         - var timerStarted = goal.timerStart != 0;
         - var loggedDayHours = Math.trunc(goal.loggedDayHours);
@@ -27,6 +29,7 @@ html
         - var totalGoalHours = Math.trunc(goal.totalHoursToGoal);
         - var totalGoalMinutes = Math.trunc((goal.totalHoursToGoal * 60) % 60);
         
+        <!-- Calculate and format progress. -->
         - var startDay = goal.startTime / 86400000;
         - var endDay = startDay + goal.durationDays;
         - var currentDay = (new Date()).getTime() / 86400000;
@@ -37,27 +40,46 @@ html
         - var weekPercentOfTimePassed = (((new Date()).getDay() / 6) * 100).toFixed(2);
         - var weekPercentHoursLogged = ((goal.loggedWeekHours / goal.totalHoursPerWeek) * 100).toFixed(2);
         
+        - var goalOnTrackTotal = totalPercentHoursLogged >= totalPercentOfTimePassed ? "Yes!" : "No.";
+        - var goalOnTrackWeek = weekPercentHoursLogged >= weekPercentOfTimePassed ? "Yes!" : "No.";
+        
+        - var isPracticeGoal = goal.totalHoursToGoal < 0;
+        
         li 
           p
             b 
               u #{goal.title}
+              
+          <!-- On track or not. -->
+          if isPracticeGoal
+            p On track: #{goalOnTrackWeek}
+          else
+            p On track: #{goalOnTrackTotal}
+            
           p= goal.description
           br
+          
+          <!-- Goal status'. -->
           p Day status: #{loggedDayHours}hrs #{loggedDayMinutes}min / #{totalDayHours}hrs #{totalDayMinutes}min
           br
+          
           p Week status: #{loggedWeekHours}hrs #{loggedWeekMinutes}min / #{totalWeekHours}hrs #{totalWeekMinutes}min
-          if goal.totalHoursToGoal >= 0
+          
+          <!-- Extra info for all goals other than practice. -->
+          if !isPracticeGoal
             p Week stats: At #{weekPercentHoursLogged}%, should be at #{weekPercentOfTimePassed}%. 
             br
             p Total status: #{loggedTotalHours}hrs #{loggedTotalMinutes}min / #{totalGoalHours}hrs #{totalGoalMinutes}min
             p Total stats: At #{totalPercentHoursLogged}%, should be at #{totalPercentOfTimePassed}%.
           
+          <!-- Timer. -->
           if timerStarted
             a(href='/goal/' + goal._id + '/toggleTimer') Stop Timer
             p === Recording goal! ===  
           else
             a(href='/goal/' + goal._id + '/toggleTimer') Start Timer
            
+          <!-- Edit -->
           p
             a(href='/goal/' + goal._id + '/edit') Edit Goal
              

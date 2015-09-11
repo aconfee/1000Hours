@@ -51,7 +51,8 @@ app.get('/goal/:goalId/delete', goal.delete);
 
 app.post('/login', login.userLogin);
 app.post('/register', register.userRegister);
-app.post('/createGoal/:type', createGoal.saveDetails); // DONE
+app.post('/createGoal/:type', createGoal.saveDetails); 
+app.post('/goal/:goalId/edit', goal.updateTime);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

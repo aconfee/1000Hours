@@ -4,9 +4,23 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
     h1= title
+    - var editUrl = '/goal/' + goalId + '/edit'
     
-    - var actionUrl = '/goal/' + goalId + '/delete';
+    p Add or remove time:
+    form(action=editUrl, method='post')
+      p
+        input(type='number', name='hours', placeholder='Hours')
+      p
+        input(type='number', name='minutes', placeholder='Minutes')
+      p
+        select(name='action')
+          option(value='add') Add Time
+          option(value='remove') Remove Time 
+      p
+        input(type='submit', value='Save')
+    
+    - var deleteUrl = '/goal/' + goalId + '/delete';
     p
-      a(href=actionUrl) Delete Goal		
+      a(href=deleteUrl) Delete Goal		
     p    
       a(href='/profile') Back to Profile

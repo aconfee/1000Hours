@@ -134,3 +134,51 @@ exports.delete = function(req, res, next){
 		res.redirect('/profile');
 	});
 };
+
+// POST
+// /goal/:goalId/edit
+exports.updateTime = function(req, res, next){
+	var goalId = req.params.goalId;
+	var hours = parseFloat(req.body.hours);
+	var minutes = parseFloat(req.body.minutes);
+	var action = req.body.action;
+	
+	hours = isNaN(hours) ? 0 : hours;
+	minutes = isNaN(minutes) ? 0 : minutes / 60;	
+	var time = hours + minutes;
+	
+	if(typeof goalId === 'undefined'){
+		console.log('Goal id provided in params is undefined.');
+		res.redirect('/profile');	
+	}
+	
+	Goal.findById(goalId, function(err, goal){
+		if(goal){
+			var loggedDay = goal.loggedDayHours;
+			var loggedWeek = goal.loggedWeekHours;
+			var loggedTotal = goal.loggedTotalHours;
+			
+			if(action === 'remove'){
+				console.log('Removing time manually.');
+				loggedDay = Math.max(0, loggedDay - time);
+				loggedWeek = Math.max(0, loggedWeek - time);
+				loggedTotal = Math.max(0, loggedTotal - time);
+			}
+			else if(action === 'add'){
+				console.log('Adding time manually.');
+				loggedDay = loggedDay + time;
+				loggedWeek = loggedWeek + time;
+				loggedTotal = loggedTotal + time;
+			}
+			
+			Goal.update({ _id: goalId }, { $set: { loggedDayHours: loggedDay, loggedWeekHours: loggedWeek, loggedTotalHours: loggedTotal }}, function(){
+				console.log('Time for goal ' + goal.title + ' was updated manually.');
+			});
+			
+			res.redirect('/profile');
+		}
+		else{
+			next(err);
+		}
+	});
+};
