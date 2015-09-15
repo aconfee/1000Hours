@@ -144,8 +144,11 @@ exports.updateTime = function(req, res, next){
 	var action = req.body.action;
 	
 	hours = isNaN(hours) ? 0 : hours;
-	minutes = isNaN(minutes) ? 0 : minutes / 60;	
+	minutes = isNaN(minutes) ? 0 : minutes / 60;
+	
+	console.log('Hours: ' + hours + '. Minutes: ' + minutes);	
 	var time = hours + minutes;
+	console.log('Time: ' + time);
 	
 	if(typeof goalId === 'undefined'){
 		console.log('Goal id provided in params is undefined.');
@@ -154,6 +157,12 @@ exports.updateTime = function(req, res, next){
 	
 	Goal.findById(goalId, function(err, goal){
 		if(goal){
+			// TODO: ui error.
+			if(goal.timerStart != 0){
+				console.log('Must stop timer in order to manually adjust time.');
+				return; 
+			}
+			
 			var loggedDay = goal.loggedDayHours;
 			var loggedWeek = goal.loggedWeekHours;
 			var loggedTotal = goal.loggedTotalHours;
@@ -166,16 +175,17 @@ exports.updateTime = function(req, res, next){
 			}
 			else if(action === 'add'){
 				console.log('Adding time manually.');
-				loggedDay = loggedDay + time;
-				loggedWeek = loggedWeek + time;
-				loggedTotal = loggedTotal + time;
+				loggedDay += time;
+				loggedWeek += time;
+				loggedTotal += time;
 			}
 			
-			Goal.update({ _id: goalId }, { $set: { loggedDayHours: loggedDay, loggedWeekHours: loggedWeek, loggedTotalHours: loggedTotal }}, function(){
-				console.log('Time for goal ' + goal.title + ' was updated manually.');
-			});
+			Goal.update({ _id: goalId }, { $set: { loggedDayHours: loggedDay, loggedWeekHours: loggedWeek, loggedTotalHours: loggedTotal, lastUpdateTime: new Date() }}, function(err, numAffected){
+				if(err)	next(err);
 			
-			res.redirect('/profile');
+				console.log('Time for goal ' + goal.title + ' was updated manually.');
+				res.redirect('/profile');
+			});
 		}
 		else{
 			next(err);
