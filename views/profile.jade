@@ -6,101 +6,120 @@ html
   body
     h1= title
     p Welcome #{username}!
-    h2 UPDATE 9/10
-    p New things! You can now add and remove time manually by clicking 'edit' for a goal. And if you missed from before, you can also now view your progress toward a goal and if you're on track or not. 
-    p Known edge case: Don't be a dick and try adding or removing negative numbers. I'm not doing any input validation anywhere yet.
-    p Feel free to email me any feedback at adamestela@gmail.com. 
     a(href='/createGoal') Create New Goal!
     
     ul
       <!-- Get all the info we need for each goal. -->
       <!-- Calculate and format hours. -->
       each goal in goals
-        - var timerStarted = goal.timerStart != 0;
-        - var loggedDayHours = Math.trunc(goal.loggedDayHours);
-        - var loggedDayMinutes = Math.trunc((goal.loggedDayHours * 60) % 60);
-        - var loggedWeekHours = Math.trunc(goal.loggedWeekHours);
-        - var loggedWeekMinutes = Math.trunc((goal.loggedWeekHours * 60) % 60);
-        - var loggedTotalHours = Math.trunc(goal.loggedTotalHours);
-        - var loggedTotalMinutes = Math.trunc((goal.loggedTotalHours * 60) % 60);
-        - var totalDayHours = Math.trunc(goal.totalHoursPerDay);
-        - var totalDayMinutes = Math.trunc((goal.totalHoursPerDay * 60) % 60);
-        - var totalWeekHours = Math.trunc(goal.totalHoursPerWeek);
-        - var totalWeekMinutes = Math.trunc((goal.totalHoursPerWeek * 60) % 60);
-        - var totalGoalHours = Math.trunc(goal.totalHoursToGoal);
-        - var totalGoalMinutes = Math.trunc((goal.totalHoursToGoal * 60) % 60);
+        - var getHoursFromTime = function(timeHours) { return Math.trunc(timeHours); };
+        - var getMinutesFromTime = function(timeHours) { return Math.trunc((timeHours * 60) % 60); };
+        - var getDaysFromTime = function(timeMilliseconds) { return Math.trunc(timeMilliseconds / 86400000); };
         
-        <!-- Calculate and format progress. -->
-        - var startDay = goal.startTime / 86400000;
-        - var endDay = startDay + goal.durationDays;
-        - var currentDay = (new Date()).getTime() / 86400000;
-        - var daysElapsed = currentDay - startDay;
+        <!-- Get important time intervals -->
+        - var daysElapsed = ((new Date()).getTime() / 86400000) - (goal.startTime / 86400000);
+        - var endTime = goal.startTime + (goal.durationDays *  86400000);
+        - var goalTimeRemaining = endTime - (new Date()).getTime();
+        
+        <!-- Day progress -->
+        - var dayPercentHoursLogged = (goal.loggedDayHours / goal.totalHoursPerDay) * 100;
+        - var dayPercentHoursLoggedStyle = Math.min(100, dayPercentHoursLogged) + "%";
+        - var dayOnTrackDeltaTime = goal.totalHoursPerDay - goal.loggedDayHours;
+        - var dayOnTrack = dayOnTrackDeltaTime < 0;
+        - dayOnTrackDeltaTime = Math.abs(dayOnTrackDeltaTime);
+        
+        <!-- Week progress -->
+        - var date = new Date();
+        - var midnightSunday = new Date(date.getFullYear(), date.getMonth(), (date.getDate() - date.getDay()), 0,0,0);
+        - var hoursSinceMidnightSunday = (date.getTime() - midnightSunday.getTime()) / 3600000;
+        
+        - var weekPercentOfTimePassed = ((hoursSinceMidnightSunday / 168) * 100).toFixed(2);
+        - var weekPercentHoursLogged = ((goal.loggedWeekHours / goal.totalHoursPerWeek) * 100).toFixed(2);        
+        - var weekPercentOfTimePassedStyle = Math.min(100, weekPercentOfTimePassed) + "%";
+        - var weekPercentHoursLoggedStyle = Math.min((100 / weekPercentOfTimePassed) * 100, ((100 / weekPercentOfTimePassed) * weekPercentHoursLogged)) + "%";
+        
+        - var weekOnTrackDeltaTime = ((weekPercentOfTimePassed - weekPercentHoursLogged) / 100) * goal.totalHoursPerWeek;
+        - var weekOnTrack = weekOnTrackDeltaTime < 0;
+        - weekOnTrackDeltaTime = Math.abs(weekOnTrackDeltaTime);
+        
+        <!-- Total progress -->
         - var totalPercentOfTimePassed = ((daysElapsed / goal.durationDays) * 100).toFixed(2);
         - var totalPercentHoursLogged = ((goal.loggedTotalHours / goal.totalHoursToGoal) * 100).toFixed(2);
-        - var totalPercentHoursLoggedStyle = totalPercentHoursLogged + "%";
+        - var totalPercentOfTimePassedStyle = Math.min(100, totalPercentOfTimePassed) + "%";
+        - var totalPercentHoursLoggedStyle = Math.min((100 / totalPercentHoursLogged) * 100, ((100 / totalPercentOfTimePassed) * totalPercentHoursLogged)) + "%";
         
-        - var weekPercentOfTimePassed = (((new Date()).getDay() / 6) * 100).toFixed(2);
-        - var weekPercentHoursLogged = ((goal.loggedWeekHours / goal.totalHoursPerWeek) * 100).toFixed(2);
-        - var weekPercentOfTimePassedStyle = Math.min(100, weekPercentOfTimePassed) + "%";
-        - var weekPercentHoursLoggedStyle = Math.min((100 / weekPercentOfTimePassed) * 100, ((100 / weekPercentOfTimePassed) * weekPercentHoursLogged).toString()) + "%";
-        - var remainingWeekTime = goal.totalHoursPerWeek - goal.loggedWeekHours;
-        - var remainingWeekHours = Math.trunc(remainingWeekTime);
-        - var remainingWeekMinutes = Math.trunc((remainingWeekTime * 60) % 60);
-        - var weekOnTrackDelta = ((weekPercentOfTimePassed - weekPercentHoursLogged) / 100) * totalWeekHours;
-        
-        - var goalOnTrackTotal = totalPercentHoursLogged >= totalPercentOfTimePassed ? "Yes!" : "No.";
-        - var goalOnTrackWeek = weekPercentHoursLogged >= weekPercentOfTimePassed ? "Yes!" : "No.";
+        - var totalOnTrackDeltaTime = ((totalPercentOfTimePassed - totalPercentHoursLogged) / 100) * goal.totalHoursToGoal;
+        - var goalOnTrack = totalOnTrackDeltaTime < 0;
+        - totalOnTrackDeltaTime = Math.abs(totalOnTrackDeltaTime);
         
         - var isPracticeGoal = goal.totalHoursToGoal < 0;
+        - var roundBar = "border-radius:5px;"
         
         li 
           p
             b 
-              u #{goal.title}
+              u #{goal.title} 
+            span= goal.description 
+            
+            <!-- Timer. -->
+            - var timerStarted = goal.timerStart != 0;
+            if timerStarted
+              span 
+                a(href='/goal/' + goal._id + '/toggleTimer') Stop Timer  
+              p === Recording goal! ===  
+            else
+              span 
+                a(href='/goal/' + goal._id + '/toggleTimer') Start Timer  
+                
+            <!-- Edit -->
+            p
+              a(href='/goal/' + goal._id + '/edit') Edit Goal 
               
           <!-- On track or not. -->
           if isPracticeGoal
-            p On track: #{goalOnTrackWeek}
+            <!-- TOOD Show image -->
+            <!-- p On track: #{weekOnTrack ? "Yes!" : "No."} -->
           else
-            p On track: #{goalOnTrackTotal}
-            
-          p= goal.description
-          br
+            <!-- p On track: #{goalOnTrack ? "Yes!" : "No."} -->
           
-          <!-- Goal status'. -->
-          p Day status: #{loggedDayHours}hrs #{loggedDayMinutes}min / #{totalDayHours}hrs #{totalDayMinutes}min
-          br
+          <!-- Goal status'. -->   
+          p #[b Today]: #{dayOnTrack ? "You are ahead by" : "You still have to complete"} #{getHoursFromTime(dayOnTrackDeltaTime)} hours and #{getMinutesFromTime(dayOnTrackDeltaTime)} minutes.       
           
-          <!-- TODO: If complete, don't show garbage -->
-          h4 WEEK
-          p Remaining time this week: #{remainingWeekHours} Hours #{remainingWeekMinutes} Minutes
-          if weekOnTrackDelta > 0
-            p Behind schedule by: #{Math.trunc(weekOnTrackDelta)} Hours #{Math.trunc((weekOnTrackDelta * 60) % 60)} Minutes
-          else 
-            p Ahead of schedule by: #{Math.trunc(weekOnTrackDelta) * -1} Hours #{Math.trunc((weekOnTrackDelta * 60) % 60) * -1} Minutes
           .goalProgressBar 
-            .goalProgressBarTimePassed(style="width:#{weekPercentOfTimePassedStyle}")
-              .goalProgressBarCompleted(style="width:#{weekPercentHoursLoggedStyle}")
-              
-          p DEBUG:
-          p Week status: #{loggedWeekHours}hrs #{loggedWeekMinutes}min / #{totalWeekHours}hrs #{totalWeekMinutes}min
+            .goalProgressBarCompleted(style="width:#{dayPercentHoursLoggedStyle};#{dayPercentHoursLogged > 98 ? roundBar : ''}") 
+              .progressBarText #{getHoursFromTime(goal.loggedDayHours)}hrs #{getMinutesFromTime(goal.loggedDayHours)}min / #{getHoursFromTime(goal.totalHoursPerDay)}hrs #{getMinutesFromTime(goal.totalHoursPerDay)}min
+          br
+          br 
             
-          <!-- Extra info for all goals other than practice. -->
-          if !isPracticeGoal
-            p Week stats: At #{weekPercentHoursLogged}%, should be at #{weekPercentOfTimePassed}%. 
-            br
-            p Total status: #{loggedTotalHours}hrs #{loggedTotalMinutes}min / #{totalGoalHours}hrs #{totalGoalMinutes}min
-            p Total stats: At #{totalPercentHoursLogged}%, should be at #{totalPercentOfTimePassed}%.
+          <!-- p Day status: #{getHoursFromTime(goal.loggedDayHours)}hrs #{getMinutesFromTime(goal.loggedDayHours)}min / #{getHoursFromTime(goal.totalHoursPerDay)}hrs #{getMinutesFromTime(goal.totalHoursPerDay)}min -->
           
-          <!-- Timer. -->
-          if timerStarted
-            a(href='/goal/' + goal._id + '/toggleTimer') Stop Timer
-            p === Recording goal! ===  
-          else
-            a(href='/goal/' + goal._id + '/toggleTimer') Start Timer
-           
-          <!-- Edit -->
-          p
-            a(href='/goal/' + goal._id + '/edit') Edit Goal
+          <!-- Week Progress -->
+          p #[b This Week]: You are #{getHoursFromTime(weekOnTrackDeltaTime)} hours and #{getMinutesFromTime(weekOnTrackDeltaTime)} minutes #{weekOnTrack ? "ahead of" : "behind"} schedule. You still have to complete #{getHoursFromTime(goal.totalHoursPerWeek - goal.loggedWeekHours)} hours and #{getMinutesFromTime(goal.totalHoursPerWeek - goal.loggedWeekHours)} minutes this week.
+          
+          .goalProgressBar 
+            .goalProgressBarTimePassed(style="width:#{weekPercentOfTimePassedStyle};#{weekPercentOfTimePassed > 98 ? roundBar : ''}")
+              .goalProgressBarCompleted(style="width:#{weekPercentHoursLoggedStyle};#{weekPercentHoursLogged > 98 ? roundBar : ''}")
+                .progressBarText #{getHoursFromTime(goal.loggedWeekHours)}hrs #{getMinutesFromTime(goal.loggedWeekHours)}min / #{getHoursFromTime(goal.totalHoursPerWeek)}hrs #{getMinutesFromTime(goal.totalHoursPerWeek)}min
+          br
+          br  
+              
+          <!--p DEBUG: -->
+          <!--p Week status: #{getHoursFromTime(goal.loggedWeekHours)}hrs #{getMinutesFromTime(goal.loggedWeekHours)}min / #{getHoursFromTime(goal.totalHoursPerWeek)}hrs #{getMinutesFromTime(goal.totalHoursPerWeek)}min --> 
+          
+          <!-- Total Progress -->
+          if !isPracticeGoal
+            <!--p Week stats: At #{weekPercentHoursLogged}%, should be at #{weekPercentOfTimePassed}%. -->
+            p #[b Today]: You are #{getHoursFromTime(totalOnTrackDeltaTime)} hours and #{getMinutesFromTime(totalOnTrackDeltaTime)} minutes #{goalOnTrack ? "ahead of" : "behind"} schedule. You still have #{getDaysFromTime(goalTimeRemaining)} days to complete remaining #{getHoursFromTime(goal.totalHoursToGoal - goal.loggedTotalHours)} hours and #{getMinutesFromTime(goal.totalHoursToGoal - goal.loggedTotalHours)} minutes.
+            
+            .goalProgressBar 
+              .goalProgressBarTimePassed(style="width:#{totalPercentOfTimePassedStyle};#{totalPercentOfTimePassed > 98 ? roundBar : ''}")
+                .goalProgressBarCompleted(style="width:#{totalPercentHoursLoggedStyle};#{totalPercentHoursLogged > 98 ? roundBar : ''}")
+                  .progressBarText #{getHoursFromTime(goal.loggedTotalHours)}hrs #{getMinutesFromTime(goal.loggedTotalHours)}min / #{getHoursFromTime(goal.totalHoursToGoal)}hrs #{getMinutesFromTime(goal.totalHoursToGoal)}min
+            
+            <!-- DEBUG -->
+            <!-- p Total status: #{getHoursFromTime(goal.loggedTotalHours)}hrs #{getMinutesFromTime(goal.loggedTotalHours)}min / #{getHoursFromTime(goal.totalHoursToGoal)}hrs #{getMinutesFromTime(goal.totalHoursToGoal)}min -->
+            <!-- p Total stats: At #{totalPercentHoursLogged}%, should be at #{totalPercentOfTimePassed}%. -->
+            
+        br
              
     a(href='/signout') Log Out
