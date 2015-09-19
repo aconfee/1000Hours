@@ -40,8 +40,6 @@ html
         - var totalPercentHoursLoggedStyle = totalPercentHoursLogged + "%";
         
         - var weekPercentOfTimePassed = (((new Date()).getDay() / 6) * 100).toFixed(2);
-        - var time = new Date();
-        p DAY #{time}
         - var weekPercentHoursLogged = ((goal.loggedWeekHours / goal.totalHoursPerWeek) * 100).toFixed(2);
         - var weekPercentOfTimePassedStyle = Math.min(100, weekPercentOfTimePassed) + "%";
         - var weekPercentHoursLoggedStyle = Math.min((100 / weekPercentOfTimePassed) * 100, ((100 / weekPercentOfTimePassed) * weekPercentHoursLogged).toString()) + "%";
