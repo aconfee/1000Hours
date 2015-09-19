@@ -2,6 +2,7 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/goals.css')
   body
     h1= title
     p Welcome #{username}!
@@ -36,9 +37,16 @@ html
         - var daysElapsed = currentDay - startDay;
         - var totalPercentOfTimePassed = ((daysElapsed / goal.durationDays) * 100).toFixed(2);
         - var totalPercentHoursLogged = ((goal.loggedTotalHours / goal.totalHoursToGoal) * 100).toFixed(2);
+        - var totalPercentHoursLoggedStyle = totalPercentHoursLogged + "%";
         
         - var weekPercentOfTimePassed = (((new Date()).getDay() / 6) * 100).toFixed(2);
         - var weekPercentHoursLogged = ((goal.loggedWeekHours / goal.totalHoursPerWeek) * 100).toFixed(2);
+        - var weekPercentOfTimePassedStyle = Math.min(100, weekPercentOfTimePassed) + "%";
+        - var weekPercentHoursLoggedStyle = Math.min((100 / weekPercentOfTimePassed) * 100, ((100 / weekPercentOfTimePassed) * weekPercentHoursLogged).toString()) + "%";
+        - var remainingWeekTime = goal.totalHoursPerWeek - goal.loggedWeekHours;
+        - var remainingWeekHours = Math.trunc(remainingWeekTime);
+        - var remainingWeekMinutes = Math.trunc((remainingWeekTime * 60) % 60);
+        - var weekOnTrackDelta = ((weekPercentOfTimePassed - weekPercentHoursLogged) / 100) * totalWeekHours;
         
         - var goalOnTrackTotal = totalPercentHoursLogged >= totalPercentOfTimePassed ? "Yes!" : "No.";
         - var goalOnTrackWeek = weekPercentHoursLogged >= weekPercentOfTimePassed ? "Yes!" : "No.";
@@ -63,12 +71,21 @@ html
           p Day status: #{loggedDayHours}hrs #{loggedDayMinutes}min / #{totalDayHours}hrs #{totalDayMinutes}min
           br
           
-          p Week status: #{loggedWeekHours}hrs #{loggedWeekMinutes}min / #{totalWeekHours}hrs #{totalWeekMinutes}min
-          
+          <!-- TODO: If complete, don't show garbage -->
+          h4 WEEK
+          p Remaining time this week: #{remainingWeekHours} Hours #{remainingWeekMinutes} Minutes
+          if weekOnTrackDelta > 0
+            p Behind schedule by: #{Math.trunc(weekOnTrackDelta)} Hours #{Math.trunc((weekOnTrackDelta * 60) % 60)} Minutes
+          else 
+            p Ahead of schedule by: #{Math.trunc(weekOnTrackDelta) * -1} Hours #{Math.trunc((weekOnTrackDelta * 60) % 60) * -1} Minutes
+          .goalProgressBar 
+            .goalProgressBarTimePassed(style="width:#{weekPercentOfTimePassedStyle}")
+              .goalProgressBarCompleted(style="width:#{weekPercentHoursLoggedStyle}")
+          br
+            
           <!-- Extra info for all goals other than practice. -->
           if !isPracticeGoal
-            p Week stats: At #{weekPercentHoursLogged}%, should be at #{weekPercentOfTimePassed}%. 
-            br
+            h4 TOTAL
             p Total status: #{loggedTotalHours}hrs #{loggedTotalMinutes}min / #{totalGoalHours}hrs #{totalGoalMinutes}min
             p Total stats: At #{totalPercentHoursLogged}%, should be at #{totalPercentOfTimePassed}%.
           

@@ -1,0 +1,33 @@
+.goalProgressBar{
+	width: 400px;
+	height: 20px;
+	background-color: #F5F5F5;
+	-webkit-box-shadow: inset -5px 9px 2px -7px rgb(219,215,219);
+	-moz-box-shadow: inset -5px 9px 2px -7px rgb(219,215,219);
+	box-shadow: inset -5px 9px 2px -7px rgb(219,215,219);
+	
+	border-radius: 5px;
+}
+
+.goalProgressBarCompleted{
+	height: 20px;
+	background-color: #5CB85C;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	
+	-webkit-box-shadow: inset 0px -8px 0px -7px rgb(78,157,78);
+	-moz-box-shadow: inset 0px -8px 0px -7px rgb(78,157,78);
+	box-shadow: inset 0px -8px 0px -7px rgb(78,157,78);
+}
+
+.goalProgressBarTimePassed{
+	height: 20px;
+	background-color: rgba(240,173,78, 0.45);
+	
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	
+	-webkit-box-shadow: inset 0px -8px 0px -7px rgba(204,147,66, 0.45);
+	-moz-box-shadow: inset 0px -8px 0px -7px rgba(204,147,66, 0.45);
+	box-shadow: inset 0px -8px 0px -7px rgba(204,147,66, 0.45);
+}
