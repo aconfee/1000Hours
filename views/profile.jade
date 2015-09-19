@@ -81,11 +81,14 @@ html
           .goalProgressBar 
             .goalProgressBarTimePassed(style="width:#{weekPercentOfTimePassedStyle}")
               .goalProgressBarCompleted(style="width:#{weekPercentHoursLoggedStyle}")
-          br
+              
+          p DEBUG:
+          p Week status: #{loggedWeekHours}hrs #{loggedWeekMinutes}min / #{totalWeekHours}hrs #{totalWeekMinutes}min
             
           <!-- Extra info for all goals other than practice. -->
           if !isPracticeGoal
-            h4 TOTAL
+            p Week stats: At #{weekPercentHoursLogged}%, should be at #{weekPercentOfTimePassed}%. 
+            br
             p Total status: #{loggedTotalHours}hrs #{loggedTotalMinutes}min / #{totalGoalHours}hrs #{totalGoalMinutes}min
             p Total stats: At #{totalPercentHoursLogged}%, should be at #{totalPercentOfTimePassed}%.
           
