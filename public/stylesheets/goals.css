@@ -1,6 +1,13 @@
+body{
+	background-color: rgb(233,234,237);
+}
+
+ul{
+	list-style: none;
+}
+
 .goalProgressBar{
-	display: inline-block;
-	width: 600px;
+	width: 650px;
 	height: 20px;
 	background-color: #F5F5F5;
 	-webkit-box-shadow: inset -5px 9px 2px -7px rgb(219,215,219);
@@ -11,11 +18,11 @@
 }
 
 .goalProgressBarCompleted{
-	display: inline-block;
 	height: 20px;
 	background-color: #5CB85C;
 	border-top-left-radius: 5px;
 	border-bottom-left-radius: 5px;
+	overflow: none;
 	
 	-webkit-box-shadow: inset 0px -8px 0px -7px rgb(78,157,78);
 	-moz-box-shadow: inset 0px -8px 0px -7px rgb(78,157,78);
@@ -23,7 +30,6 @@
 }
 
 .goalProgressBarTimePassed{
-	display: inline-block;
 	height: 20px;
 	background-color: rgba(240,173,78, 0.35);
 	
@@ -36,8 +42,20 @@
 }
 
 .progressBarText{
-	display: inline-block;
 	color: white;
 	margin-left: 8px;
 	margin-top: 1px;
+	overflow: none;
+}
+
+.goalContainer{
+	background-color: white;
+	border-radius: 5px;
+	padding: 20px 20px;
+	max-width: 700px;
+}
+
+.center{
+	margin:auto;
+	padding: 30px;
 }

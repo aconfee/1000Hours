@@ -7,8 +7,9 @@ html
     h1= title
     p Welcome #{username}!
     a(href='/createGoal') Create New Goal!
-    
-    ul
+    p
+        
+    ul.center
       <!-- Get all the info we need for each goal. -->
       <!-- Calculate and format hours. -->
       each goal in goals
@@ -55,21 +56,18 @@ html
         - var isPracticeGoal = goal.totalHoursToGoal < 0;
         - var roundBar = "border-radius:5px;"
         
-        li 
+        li.goalContainer.center
+          h1 #{goal.title} 
+          p= goal.description 
           p
-            b 
-              u #{goal.title} 
-            span= goal.description 
-            
+                      
             <!-- Timer. -->
             - var timerStarted = goal.timerStart != 0;
             if timerStarted
-              span 
-                a(href='/goal/' + goal._id + '/toggleTimer') Stop Timer  
+              a(href='/goal/' + goal._id + '/toggleTimer') Stop Timer  
               p === Recording goal! ===  
             else
-              span 
-                a(href='/goal/' + goal._id + '/toggleTimer') Start Timer  
+              a(href='/goal/' + goal._id + '/toggleTimer') Start Timer  
                 
             <!-- Edit -->
             p
