@@ -109,7 +109,7 @@ html
           <!-- Total Progress -->
           if !isPracticeGoal
             <!--p Week stats: At #{weekPercentHoursLogged}%, should be at #{weekPercentOfTimePassed}%. -->
-            p #[b Today]: You are #{getHoursFromTime(totalOnTrackDeltaTime)} hours and #{getMinutesFromTime(totalOnTrackDeltaTime)} minutes #{goalOnTrack ? "ahead of" : "behind"} schedule. You still have #{getDaysFromTime(goalTimeRemaining)} days to complete remaining #{getHoursFromTime(goal.totalHoursToGoal - goal.loggedTotalHours)} hours and #{getMinutesFromTime(goal.totalHoursToGoal - goal.loggedTotalHours)} minutes.
+            p #[b Goal Total]: You are #{getHoursFromTime(totalOnTrackDeltaTime)} hours and #{getMinutesFromTime(totalOnTrackDeltaTime)} minutes #{goalOnTrack ? "ahead of" : "behind"} schedule. You still have #{getDaysFromTime(goalTimeRemaining)} days to complete remaining #{getHoursFromTime(goal.totalHoursToGoal - goal.loggedTotalHours)} hours and #{getMinutesFromTime(goal.totalHoursToGoal - goal.loggedTotalHours)} minutes.
             
             .goalProgressBar 
               .goalProgressBarTimePassed(style="width:#{totalPercentOfTimePassedStyle};#{totalPercentOfTimePassed > 98 ? roundBar : ''}")
