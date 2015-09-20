@@ -6,6 +6,8 @@ html
   body
     h1= title
     p Welcome #{username}!
+    a(href='/signout') Log Out
+    p
     a(href='/createGoal') Create New Goal!
     p
         
@@ -117,7 +119,3 @@ html
             <!-- DEBUG -->
             <!-- p Total status: #{getHoursFromTime(goal.loggedTotalHours)}hrs #{getMinutesFromTime(goal.loggedTotalHours)}min / #{getHoursFromTime(goal.totalHoursToGoal)}hrs #{getMinutesFromTime(goal.totalHoursToGoal)}min -->
             <!-- p Total stats: At #{totalPercentHoursLogged}%, should be at #{totalPercentOfTimePassed}%. -->
-            
-        br
-             
-    a(href='/signout') Log Out
