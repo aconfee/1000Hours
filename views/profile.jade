@@ -58,7 +58,7 @@ html
         - var isPracticeGoal = goal.totalHoursToGoal < 0;
         - var roundBar = "border-radius:5px;"
         
-        li.goalContainer.center
+        li.center.goalContainer(style="margin-bottom:15px;")
           h1 #{goal.title} 
           p= goal.description 
           p
@@ -119,3 +119,4 @@ html
             <!-- DEBUG -->
             <!-- p Total status: #{getHoursFromTime(goal.loggedTotalHours)}hrs #{getMinutesFromTime(goal.loggedTotalHours)}min / #{getHoursFromTime(goal.totalHoursToGoal)}hrs #{getMinutesFromTime(goal.totalHoursToGoal)}min -->
             <!-- p Total stats: At #{totalPercentHoursLogged}%, should be at #{totalPercentOfTimePassed}%. -->
+          
