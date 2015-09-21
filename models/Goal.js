@@ -14,7 +14,7 @@ var Goal = new Schema({
 	timerStart: Number,
 	startTime: Number,
 	durationDays: Number,
-	lastUpdateUTC: Date
+	lastUpdateTime: Date
 });
 
 module.exports = mongoose.model('Goal', Goal);

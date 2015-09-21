@@ -15,7 +15,6 @@ exports.createMasterGoal = function(req, res, next){
 			console.log('Saving new goal ' + title + ' for ' + user.username);
 			
 			var date = new Date();
-			var dateUTC = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
 				
 			Goal.create({
 				ownername: user.username,
@@ -28,9 +27,9 @@ exports.createMasterGoal = function(req, res, next){
 				totalHoursPerWeek: totalGoalHours / (daysToCompleteGoal / 7),
 				totalHoursToGoal: totalGoalHours,
 				timerStart: 0,
-				startTime: (new Date()).getTime(), // Expected % complete = (CurrentTime - startTime)in days / durationDays
+				startTime: date.getTime(), // Expected % complete = (CurrentTime - startTime)in days / durationDays
 				durationDays: daysToCompleteGoal,
-				lastUpdateUTC: dateUTC
+				lastUpdateTime: date
 			}, function(err){
 				if(err) throw err;
 				
