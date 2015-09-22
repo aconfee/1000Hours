@@ -64,3 +64,8 @@ ul{
 	margin: 0 auto;
 	padding: 30px;
 }
+
+.timeStatusText{
+	font-size: 0.8em;
+	margin-bottom: 0;
+}
